@@ -44,13 +44,13 @@ export const signup = async (req, res) => {
 
     await sendVerificationEmail(user.email, verificationToken);
 
+    const safeUser = user.toObject ? user.toObject() : { ...user };
+    delete safeUser.password;
+
     res.status(201).json({
       success: true,
       message: "User created successfully",
-      user: {
-        ...user.doc,
-        password: undefined,
-      },
+      user: safeUser,
     });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
@@ -78,13 +78,13 @@ export const verifyEmail = async (req, res) => {
 
     await sendWelcomeEmail(user.email, user.name);
 
+    const safeUser = user.toObject ? user.toObject() : { ...user };
+    delete safeUser.password;
+
     res.json({
       success: true,
       message: "Email verified successfully",
-      user: {
-        ...user.doc,
-        password: undefined,
-      },
+      user: safeUser,
     });
   } catch (error) {
     console.log("Error in verifyEmail", error);
