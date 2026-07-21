@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="420" viewBox="0 0 1200 420"
+     role="img" aria-labelledby="title desc">
+  <title id="title">MERN Auth Builder Architecture</title>
+  <desc id="desc">Visual flow showing React Client (Zustand, Axios) communicating with Express Server (JWT Auth), MongoDB Mongoose, and Gmail SMTP Nodemailer service.</desc>
+
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bg-grad" cx="60%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#141a29" />
+      <stop offset="100%" stop-color="#090d16" />
+    </radialGradient>
+
+    <!-- Component Border Gradients -->
+    <linearGradient id="accent-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#111827" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.95" />
+    </linearGradient>
+
+    <!-- Drop Shadows -->
+    <filter id="drop-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+
+    <!-- Arrow Markers -->
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#a855f7" />
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#3b82f6" />
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#10b981" />
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#f97316" />
+    </marker>
+    <marker id="arrow-orange-up" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#f97316" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="420" rx="16" fill="url(#bg-grad)"/>
+
+  <!-- Left Side: Title & Description -->
+  <g id="title-block" transform="translate(60, 0)">
+    <text x="0" y="85" fill="#a855f7" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="16" letter-spacing="2">FULL-STACK BOILERPLATE</text>
+    <text x="0" y="145" fill="url(#accent-grad)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="52">MERN Auth Builder</text>
+    <text x="0" y="200" fill="#9ca3af" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="400" font-size="20">A robust MERN stack authentication starter kit</text>
+    <text x="0" y="232" fill="#9ca3af" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="400" font-size="20">featuring secure cookie JWTs, OTP mailer flow</text>
+    <text x="0" y="264" fill="#9ca3af" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="400" font-size="20">and interactive glassmorphic UI components.</text>
+
+    <!-- Tech Badges -->
+    <g id="tech-tags" transform="translate(0, 310)">
+      <!-- React -->
+      <rect x="0" y="0" width="85" height="34" rx="8" fill="#111827" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="42.5" y="22" fill="#3b82f6" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="bold" text-anchor="middle">React</text>
+
+      <!-- Express -->
+      <rect x="95" y="0" width="95" height="34" rx="8" fill="#111827" stroke="#9ca3af" stroke-width="1.5"/>
+      <text x="142.5" y="22" fill="#e5e7eb" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="bold" text-anchor="middle">Express</text>
+
+      <!-- MongoDB -->
+      <rect x="200" y="0" width="105" height="34" rx="8" fill="#111827" stroke="#10b981" stroke-width="1.5"/>
+      <text x="252.5" y="22" fill="#10b981" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="bold" text-anchor="middle">MongoDB</text>
+
+      <!-- Node.js -->
+      <rect x="315" y="0" width="95" height="34" rx="8" fill="#111827" stroke="#22c55e" stroke-width="1.5"/>
+      <text x="362.5" y="22" fill="#22c55e" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="bold" text-anchor="middle">Node.js</text>
+
+      <!-- Zustand -->
+      <rect x="0" y="46" width="140" height="34" rx="8" fill="#111827" stroke="#ec4899" stroke-width="1.5"/>
+      <text x="70" y="68" fill="#ec4899" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="bold" text-anchor="middle">Zustand Store</text>
+
+      <!-- Tailwind -->
+      <rect x="150" y="46" width="135" height="34" rx="8" fill="#111827" stroke="#06b6d4" stroke-width="1.5"/>
+      <text x="217.5" y="68" fill="#06b6d4" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="bold" text-anchor="middle">Tailwind v4</text>
+    </g>
+  </g>
+
+  <!-- Right Side: Interactive Flow Architecture -->
+  <g id="architecture-diagram" transform="translate(0, 0)">
+    <!-- 1. Client Card -->
+    <g transform="translate(640, 50)" filter="url(#drop-shadow)">
+      <rect x="0" y="0" width="220" height="100" rx="14" fill="url(#card-grad)" stroke="#3b82f6" stroke-width="1.5"/>
+      <circle cx="24" cy="28" r="6" fill="#3b82f6"/>
+      <text x="44" y="34" fill="#f3f4f6" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18" font-weight="700">React Frontend</text>
+      <text x="24" y="65" fill="#9ca3af" font-family="ui-monospace, SFMono-Regular, monospace" font-size="13">Zustand Store State</text>
+      <text x="24" y="82" fill="#9ca3af" font-family="ui-monospace, SFMono-Regular, monospace" font-size="13">Axios (credentials: true)</text>
+    </g>
+
+    <!-- 2. Express Server Card -->
+    <g transform="translate(930, 50)" filter="url(#drop-shadow)">
+      <rect x="0" y="0" width="220" height="100" rx="14" fill="url(#card-grad)" stroke="#a855f7" stroke-width="1.5"/>
+      <circle cx="24" cy="28" r="6" fill="#a855f7"/>
+      <text x="44" y="34" fill="#f3f4f6" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18" font-weight="700">Express Backend</text>
+      <text x="24" y="65" fill="#9ca3af" font-family="ui-monospace, SFMono-Regular, monospace" font-size="13">JWT Cookie Parser</text>
+      <text x="24" y="82" fill="#9ca3af" font-family="ui-monospace, SFMono-Regular, monospace" font-size="13">Nodemailer Transport</text>
+    </g>
+
+    <!-- 3. MongoDB Card -->
+    <g transform="translate(930, 260)" filter="url(#drop-shadow)">
+      <rect x="0" y="0" width="220" height="100" rx="14" fill="url(#card-grad)" stroke="#10b981" stroke-width="1.5"/>
+      <circle cx="24" cy="28" r="6" fill="#10b981"/>
+      <text x="44" y="34" fill="#f3f4f6" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="17" font-weight="700">MongoDB Database</text>
+      <text x="24" y="65" fill="#9ca3af" font-family="ui-monospace, SFMono-Regular, monospace" font-size="13">User Schema</text>
+      <text x="24" y="82" fill="#9ca3af" font-family="ui-monospace, SFMono-Regular, monospace" font-size="13">Auth OTP Codes</text>
+    </g>
+
+    <!-- 4. SMTP Mailer Card -->
+    <g transform="translate(640, 260)" filter="url(#drop-shadow)">
+      <rect x="0" y="0" width="220" height="100" rx="14" fill="url(#card-grad)" stroke="#f97316" stroke-width="1.5"/>
+      <circle cx="24" cy="28" r="6" fill="#f97316"/>
+      <text x="44" y="34" fill="#f3f4f6" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18" font-weight="700">Gmail SMTP</text>
+      <text x="24" y="65" fill="#9ca3af" font-family="ui-monospace, SFMono-Regular, monospace" font-size="13">Nodemailer Dispatch</text>
+      <text x="24" y="82" fill="#9ca3af" font-family="ui-monospace, SFMono-Regular, monospace" font-size="13">Welcome, OTP &amp; Reset</text>
+    </g>
+
+    <!-- CONNECTIONS & LABELS -->
+
+    <!-- Connection: React -> Express (HTTPS Req) -->
+    <path d="M 860 80 L 920 80" stroke="#a855f7" stroke-width="2" stroke-dasharray="4,4" fill="none" marker-end="url(#arrow-purple)"/>
+    <g transform="translate(862, 58)">
+      <rect x="0" y="0" width="66" height="18" rx="4" fill="#1e1b4b" stroke="#a855f7" stroke-width="1"/>
+      <text x="33" y="13" fill="#e9d5ff" font-family="ui-monospace, SFMono-Regular, monospace" font-size="10" font-weight="bold" text-anchor="middle">HTTPS API</text>
+    </g>
+
+    <!-- Connection: Express -> React (JWT Cookie) -->
+    <path d="M 930 120 L 870 120" stroke="#3b82f6" stroke-width="2" fill="none" marker-end="url(#arrow-blue)"/>
+    <g transform="translate(861, 125)">
+      <rect x="0" y="0" width="68" height="18" rx="4" fill="#0f172a" stroke="#3b82f6" stroke-width="1"/>
+      <text x="34" y="13" fill="#dbeafe" font-family="ui-monospace, SFMono-Regular, monospace" font-size="10" font-weight="bold" text-anchor="middle">JWT Cookie</text>
+    </g>
+
+    <!-- Connection: Express -> MongoDB -->
+    <path d="M 1040 150 L 1040 250" stroke="#10b981" stroke-width="2" fill="none" marker-end="url(#arrow-green)"/>
+    <g transform="translate(985, 190)">
+      <rect x="0" y="0" width="110" height="20" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+      <text x="55" y="14" fill="#d1fae5" font-family="ui-monospace, SFMono-Regular, monospace" font-size="11" font-weight="bold" text-anchor="middle">Mongoose DB</text>
+    </g>
+
+    <!-- Connection: Express -> Gmail SMTP -->
+    <path d="M 950 150 L 950 200 L 810 200 L 810 250" stroke="#f97316" stroke-width="2" fill="none" marker-end="url(#arrow-orange)"/>
+    <g transform="translate(830, 190)">
+      <rect x="0" y="0" width="100" height="20" rx="4" fill="#7c2d12" stroke="#f97316" stroke-width="1"/>
+      <text x="50" y="14" fill="#ffedd5" font-family="ui-monospace, SFMono-Regular, monospace" font-size="11" font-weight="bold" text-anchor="middle">Trigger SMTP</text>
+    </g>
+
+    <!-- Connection: Gmail SMTP -> React Client -->
+    <path d="M 720 260 L 720 160" stroke="#f97316" stroke-width="2" stroke-dasharray="4,4" fill="none" marker-end="url(#arrow-orange-up)"/>
+    <g transform="translate(670, 190)">
+      <rect x="0" y="0" width="100" height="20" rx="4" fill="#0f172a" stroke="#f97316" stroke-width="1"/>
+      <text x="50" y="14" fill="#ffedd5" font-family="ui-monospace, SFMono-Regular, monospace" font-size="10" font-weight="bold" text-anchor="middle">Deliver OTP/Link</text>
+    </g>
+  </g>
+</svg>
