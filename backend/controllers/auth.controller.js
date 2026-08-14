@@ -42,7 +42,16 @@ export const signup = async (req, res) => {
     //jwt
     generateTokenAndSetCookie(res, user._id);
 
-    await sendVerificationEmail(user.email, verificationToken);
+    try {
+      await sendVerificationEmail(user.email, verificationToken);
+    } catch (emailError) {
+      console.error("Email sending failed during signup. Rolling back user creation.", emailError);
+      await User.findByIdAndDelete(user._id);
+      return res.status(500).json({
+        success: false,
+        message: `Failed to send verification email: ${emailError.message}`,
+      });
+    }
 
     const safeUser = user.toObject ? user.toObject() : { ...user };
     delete safeUser.password;

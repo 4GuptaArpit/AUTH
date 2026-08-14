@@ -18,8 +18,8 @@ export const sendVerificationEmail = async (email, verificationToken) => {
     });
     console.log("Email sent successfully", response);
   } catch (error) {
-    console.error(`Error sending verification email : ${error}`);
-    throw new Error(`Error sending verification email : ${error}`);
+    console.error("Error sending verification email:", error);
+    throw new Error(error.message || "Failed to send email via SMTP provider");
   }
 };
 
