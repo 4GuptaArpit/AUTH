@@ -9,6 +9,9 @@ export const mailtrapClient = nodemailer.createTransport({
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_TOKEN,
   },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
 });
 
 export const sender = {

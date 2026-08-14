@@ -11,12 +11,16 @@ const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const { isLoading, forgotPassword } = useAuthStore();
+  const { isLoading, error, forgotPassword } = useAuthStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await forgotPassword(email);
-    setIsSubmitted(true);
+    try {
+      await forgotPassword(email);
+      setIsSubmitted(true);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -45,11 +49,13 @@ const ForgotPasswordPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {error && <p className="text-red-500 font-semibold mb-4 text-center">{error}</p>}
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="w-full py-3 px-4 bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold rounded-lg shadow-lg hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-900 transition duration-200"
               type="submit"
+              disabled={isLoading}
             >
               {isLoading ? (
                 <Loader className="size-6 animate-spin mx-auto" />

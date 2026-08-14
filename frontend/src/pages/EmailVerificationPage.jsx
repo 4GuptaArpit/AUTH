@@ -11,7 +11,8 @@ const EmailVerificationPage = () => {
   const inputRefs = useRef([]);
   const navigate = useNavigate();
 
-  const { error, isLoading, verifyEmail } = useAuthStore();
+  const { error, isLoading, user, verifyEmail, resendVerificationCode } = useAuthStore();
+  const [isResending, setIsResending] = useState(false);
 
   const handleChange = (index, value) => {
     const newCode = [...code];
@@ -54,6 +55,18 @@ const EmailVerificationPage = () => {
       toast.success("Email verified successfully");
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleResend = async () => {
+    setIsResending(true);
+    try {
+      await resendVerificationCode(user?.email);
+      toast.success("New verification code sent to your email!");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || err?.message || "Failed to resend code");
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -106,6 +119,19 @@ const EmailVerificationPage = () => {
             {isLoading ? "Verifying..." : "Verify Email"}
           </motion.button>
         </form>
+        <div className="mt-4 text-center">
+          <p className="text-sm text-gray-400">
+            Didn't receive code or code expired?{" "}
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={isResending}
+              className="text-purple-400 hover:underline font-semibold focus:outline-none disabled:opacity-50 cursor-pointer"
+            >
+              {isResending ? "Resending..." : "Resend Code"}
+            </button>
+          </p>
+        </div>
       </motion.div>
     </div>
   );

@@ -19,24 +19,33 @@ export const signup = async (req, res) => {
         .json({ success: false, message: "All fields are required" });
     }
 
-    const userAlreadyExists = await User.findOne({ email });
-    if (userAlreadyExists) {
-      return res
-        .status(400)
-        .json({ success: false, message: "User already exists" });
-    }
-
+    let user = await User.findOne({ email });
     const hashedPassword = await bcryptjs.hash(password, 10);
     const verificationToken = Math.floor(
       100000 + Math.random() * 900000,
     ).toString();
-    const user = new User({
-      email,
-      password: hashedPassword,
-      name,
-      verificationToken,
-      verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
-    });
+
+    if (user) {
+      if (user.isVerified) {
+        return res
+          .status(400)
+          .json({ success: false, message: "User already exists" });
+      }
+      // If user exists but is NOT verified, update account and issue a new verification code
+      user.name = name;
+      user.password = hashedPassword;
+      user.verificationToken = verificationToken;
+      user.verificationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000;
+    } else {
+      user = new User({
+        email,
+        password: hashedPassword,
+        name,
+        verificationToken,
+        verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
+      });
+    }
+
     await user.save();
 
     //jwt
@@ -45,8 +54,7 @@ export const signup = async (req, res) => {
     try {
       await sendVerificationEmail(user.email, verificationToken);
     } catch (emailError) {
-      console.error("Email sending failed during signup. Rolling back user creation.", emailError);
-      await User.findByIdAndDelete(user._id);
+      console.error("Email sending failed during signup.", emailError);
       return res.status(500).json({
         success: false,
         message: `Failed to send verification email: ${emailError.message}`,
@@ -58,11 +66,50 @@ export const signup = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "User created successfully",
+      message: "Verification code sent to email",
       user: safeUser,
     });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+export const resendVerification = async (req, res) => {
+  try {
+    let user;
+    if (req.userId) {
+      user = await User.findById(req.userId);
+    }
+    if (!user && req.body.email) {
+      user = await User.findOne({ email: req.body.email });
+    }
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "User not found" });
+    }
+
+    if (user.isVerified) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Account is already verified" });
+    }
+
+    const verificationToken = Math.floor(
+      100000 + Math.random() * 900000,
+    ).toString();
+    user.verificationToken = verificationToken;
+    user.verificationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000;
+    await user.save();
+
+    await sendVerificationEmail(user.email, verificationToken);
+
+    res.status(200).json({
+      success: true,
+      message: "Verification code resent successfully",
+    });
+  } catch (error) {
+    console.error("Error in resendVerification:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -85,7 +132,11 @@ export const verifyEmail = async (req, res) => {
     user.verificationTokenExpiresAt = undefined;
     await user.save();
 
-    await sendWelcomeEmail(user.email, user.name);
+    try {
+      await sendWelcomeEmail(user.email, user.name);
+    } catch (welcomeErr) {
+      console.error("Failed to send welcome email (non-fatal):", welcomeErr);
+    }
 
     const safeUser = user.toObject ? user.toObject() : { ...user };
     delete safeUser.password;
@@ -138,7 +189,11 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
   res.status(200).json({ success: true, message: "Logged out successfully" });
 };
 
@@ -160,10 +215,18 @@ export const forgotPassword = async (req, res) => {
 
     await user.save();
 
-    await sendPasswordResetEmail(
-      user.email,
-      `${process.env.CLIENT_URL}/reset-password/${resetToken}`,
-    );
+    try {
+      await sendPasswordResetEmail(
+        user.email,
+        `${process.env.CLIENT_URL || "http://localhost:5173"}/reset-password/${resetToken}`,
+      );
+    } catch (emailErr) {
+      console.error("Failed to send password reset email:", emailErr);
+      return res.status(500).json({
+        success: false,
+        message: `Failed to send password reset email: ${emailErr.message}`,
+      });
+    }
 
     res.json({ success: true, message: "Password reset link sent to email" });
   } catch (error) {
@@ -196,9 +259,13 @@ export const resetPassword = async (req, res) => {
 
     await user.save();
 
-    await sendResetSuccessEmail(user.email);
+    try {
+      await sendResetSuccessEmail(user.email);
+    } catch (emailErr) {
+      console.error("Failed to send reset success email (non-fatal):", emailErr);
+    }
 
-    res.json({ success: true, message: "Passsword reset successful" });
+    res.json({ success: true, message: "Password reset successful" });
   } catch (error) {
     console.log("Error in resetPassword ", error);
     return res.status(500).json({ success: false, message: "Server error" });
