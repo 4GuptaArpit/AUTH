@@ -25,6 +25,7 @@ export const signup = async (req, res) => {
       100000 + Math.random() * 900000,
     ).toString();
 
+    const isNewUser = !user;
     if (user) {
       if (user.isVerified) {
         return res
@@ -55,6 +56,9 @@ export const signup = async (req, res) => {
       await sendVerificationEmail(user.email, verificationToken);
     } catch (emailError) {
       console.error("Email sending failed during signup.", emailError);
+      if (isNewUser) {
+        await User.findByIdAndDelete(user._id);
+      }
       return res.status(500).json({
         success: false,
         message: `Failed to send verification email: ${emailError.message}`,
